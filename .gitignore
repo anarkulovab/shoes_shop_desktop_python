@@ -9,4 +9,6 @@ venv/
 *.log
 .DS_Store
 Thumbs.db
-build/main
+build/
+dist/
+*.spec
