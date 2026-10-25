@@ -39,7 +39,7 @@ class OrderDialog(object):
         self.label_2.setGeometry(QtCore.QRect(20, 110, 81, 21))
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(parent=self.frame)
-        self.label_3.setGeometry(QtCore.QRect(510, 100, 201, 21))
+        self.label_3.setGeometry(QtCore.QRect(510, 30, 201, 21))
         self.label_3.setObjectName("label_3")
         self.label_4 = QtWidgets.QLabel(parent=self.frame)
         self.label_4.setGeometry(QtCore.QRect(20, 210, 151, 16))
@@ -54,7 +54,7 @@ class OrderDialog(object):
         self.status_box.setGeometry(QtCore.QRect(20, 140, 251, 41))
         self.status_box.setObjectName("status_box")
         self.comboBox_2 = QtWidgets.QComboBox(parent=self.frame)
-        self.comboBox_2.setGeometry(QtCore.QRect(510, 140, 251, 41))
+        self.comboBox_2.setGeometry(QtCore.QRect(500, 60, 251, 41))
         self.comboBox_2.setObjectName("comboBox_2")
         self.dateEdit = QtWidgets.QDateEdit(parent=self.frame)
         self.dateEdit.setGeometry(QtCore.QRect(20, 240, 251, 41))
@@ -68,6 +68,18 @@ class OrderDialog(object):
         self.buttonBox.setOrientation(QtCore.Qt.Orientation.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Cancel|QtWidgets.QDialogButtonBox.StandardButton.Ok)
         self.buttonBox.setObjectName("buttonBox")
+        self.label_6 = QtWidgets.QLabel(parent=self.frame)
+        self.label_6.setGeometry(QtCore.QRect(320, 110, 55, 16))
+        self.label_6.setObjectName("label_6")
+        self.comboBox = QtWidgets.QComboBox(parent=self.frame)
+        self.comboBox.setGeometry(QtCore.QRect(320, 130, 251, 41))
+        self.comboBox.setObjectName("comboBox")
+        self.lineEdit_2 = QtWidgets.QLineEdit(parent=self.frame)
+        self.lineEdit_2.setGeometry(QtCore.QRect(590, 130, 121, 41))
+        self.lineEdit_2.setObjectName("lineEdit_2")
+        self.label_7 = QtWidgets.QLabel(parent=self.frame)
+        self.label_7.setGeometry(QtCore.QRect(590, 110, 121, 16))
+        self.label_7.setObjectName("label_7")
 
         self.retranslateUi(Dialog)
         self.buttonBox.accepted.connect(Dialog.accept) # type: ignore
@@ -82,6 +94,8 @@ class OrderDialog(object):
         self.label_3.setText(_translate("Dialog", "Адрес пункта выдачи"))
         self.label_4.setText(_translate("Dialog", "Дата заказа"))
         self.label_5.setText(_translate("Dialog", "Дата выдачи"))
+        self.label_6.setText(_translate("Dialog", "Товар"))
+        self.label_7.setText(_translate("Dialog", "Количество"))
 
 
 if __name__ == "__main__":

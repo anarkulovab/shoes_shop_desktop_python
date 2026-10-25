@@ -1,7 +1,6 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QWidget, QApplication
-
 from dialogs.order_form import OrderForm
 from ui_py.main_win import MainWin
 from database.db import *
@@ -113,8 +112,7 @@ class AdminWin(QMainWindow, MainWin):
 
     def load_suppliers(self):
         try:
-            sql = """SELECT name FROM suppliers;"""
-            res = select_query(sql)
+            res = select_query("SELECT name FROM suppliers;")
             self.suppliers = ["Все поставщики"] + [item['name'] for item in res]
             self.comboBox_2.addItems(self.suppliers)
         except Exception as e:
@@ -156,13 +154,12 @@ class AdminWin(QMainWindow, MainWin):
 
     def product_form(self, product=None):
         try:
-            self.form = ProductForm(product)
-            self.form.exec()
-            if self.form.accepted:
+            product_dialog = ProductForm(product)
+            product_dialog.exec()
+            if product_dialog.accepted:
                 self.get_products()
         except Exception as e:
             print("add_product: ", e)
-
 
     def load_orders(self):
         try:
@@ -175,6 +172,7 @@ class AdminWin(QMainWindow, MainWin):
                                        "JOIN statuses s ON s.status_id = o.status_id "
                                        "JOIN pick_up_points p ON p.point_id = o.point_address_id "
                                        "ORDER BY o.order_id ASC;")
+
             for order in self.orders:
                 order_id = order['order_id']
                 status = order['status_name']
@@ -197,7 +195,7 @@ class AdminWin(QMainWindow, MainWin):
         except Exception as e:
             print("load_orders: ", e)
 
-    def order_form(self, order):
+    def order_form(self, order=None):
         try:
             dialog = OrderForm(order)
             dialog.exec()

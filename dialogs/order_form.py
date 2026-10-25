@@ -19,20 +19,24 @@ class OrderForm(QDialog, OrderDialog):
             delete_btn.clicked.connect(self.delete_order)
             self.set_order_values(order)
         self.lineEdit.setEnabled(False)
+        self.dateEdit.setCalendarPopup(True)
         self.buttonBox.accepted.connect(self.save_order)
 
     def set_combo_values(self):
         try:
             statuses = select_query("SELECT * FROM statuses;")
             points = select_query("SELECT * FROM pick_up_points;")
+            items = select_query("SELECT article FROM products;")
             self.status_box.addItems([status['name'] for status in statuses])
             self.comboBox_2.addItems(point['address'] for point in points)
+            self.comboBox.addItems([item['article'] for item in items] )
         except Exception as e:
             print("set_combo_values: ", e)
 
     def delete_order(self):
         try:
             order_id = self.lineEdit.text()
+
             update_query("DELETE FROM order_products WHERE order_id = %s", (order_id,))
             update_query("DELETE FROM orders WHERE order_id = %s", (order_id,))
             QMessageBox.question(self, "Удаление товара", "Вы уверены, что хотите удалить заказ?")
@@ -49,11 +53,19 @@ class OrderForm(QDialog, OrderDialog):
             order_date = order['order_date']
             delivery_date = order['delivery_date']
 
+            sql = ("SELECT p.article as article, op.amount as amount FROM order_products op "
+                   "JOIN products p ON p.product_id = op.product_id "
+                   "WHERE order_id = %s "
+                   "LIMIT 1;")
+            res = select_query(sql, (order_id, ))[0]
+
             self.lineEdit.setText(f"{order_id}")
             self.status_box.setCurrentText(status)
             self.comboBox_2.setCurrentText(point)
             self.dateEdit.setDate(order_date)
             self.dateEdit_2.setDate(delivery_date)
+            self.comboBox.setCurrentText(res['article'])
+            self.lineEdit_2.setText(f"{res['amount']}")
         except Exception as e:
             print("set_order_values: ", e)
 
@@ -63,9 +75,12 @@ class OrderForm(QDialog, OrderDialog):
             point = self.comboBox_2.currentText()
             order_date = self.dateEdit.date()
             delivery_date = self.dateEdit.date()
+            item = self.comboBox.currentText()
+            amount = self.lineEdit_2.text()
 
             status_id = select_query("SELECT status_id FROM statuses WHERE name=%s", status)[0]['status_id']
             point_id = select_query("SELECT point_id FROM pick_up_points WHERE address = %s", point)[0]['point_id']
+            item_id = select_query("SELECT product_id FROM products WHERE article=%s", item)[0]['product_id']
 
             if delivery_date < order_date:
                 QMessageBox.warning(self, "Ошибка", "Дата выдачи не может быть раньше даты заказа")
@@ -84,7 +99,10 @@ class OrderForm(QDialog, OrderDialog):
                         VALUES (%s, %s, %s, %s, %s, %s)"""
                 code_to_take = random.randint(100, 999)
                 if update_query(sql, (order_date, delivery_date, point_id, 1, code_to_take, status_id)):
-                    QMessageBox.information(self, "Успешно", "Данные успешно сохранены")
+                    order_id = select_query("SELECT MAX(order_id) as last_id FROM orders;")[0]['last_id']
+                    sql = "INSERT INTO order_products(order_id, product_id, amount) VALUES (%s, %s, %s)"
+                    if update_query(sql, (order_id, item_id, amount)):
+                        QMessageBox.information(self, "Успешно", "Данные успешно сохранены")
         except Exception as e:
             print("save_order: ", e)
 

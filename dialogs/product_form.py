@@ -1,5 +1,3 @@
-from itertools import product
-
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap, QIntValidator, QDoubleValidator
 from PyQt6.QtWidgets import QDialog, QApplication, QDialogButtonBox, QWidget, QFileDialog, QMessageBox
@@ -82,6 +80,7 @@ class ProductForm(QDialog, ProductsDialog):
             product_id = self.id_edit.text()
             sql = "DELETE FROM products WHERE product_id = %s AND product_id NOT IN (SELECT product_id FROM order_products)"
             update_query(sql, product_id)
+            QMessageBox.question(self, "Удаление", "Вы точно хотите удалить товар?")
             QMessageBox.information(self, "Успех", "Товар успешно удален")
             self.accept()
         except Exception as e:
