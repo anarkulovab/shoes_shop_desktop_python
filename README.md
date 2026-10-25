@@ -87,7 +87,7 @@ shoes-shop-app/
 Клонируйте репозиторий:
 ```
 git clone https://github.com/anarkulovab/shoes_shop_desktop_python.git
-cd shoes-shop-app
+cd shoes_shop_desktop_python
 ```
 
 ###Требования
